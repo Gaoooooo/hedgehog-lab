@@ -12,8 +12,15 @@ export class Chol {
     //dimension n
     const n = A.rows;
 
+    //check for hermitian (note: does not account for complex/imaginary matrix values)
+    // while this could be added to the later NaN check, this lets the user know what caused the NaN: positive definite, or hermitian errors
+    if ( !(A.equals( A.T() ) ) ) {
+      throw new Error('Non Hermitian; Cholesky decomposition does not apply.');
+    }
+
     //matrix L
     let L = new Mat().zeros(n, n);
+
 
     //iteration
     for (let i = 0; i < n; i++) {
@@ -25,8 +32,15 @@ export class Chol {
 
         if (i === k) {
           L.val[i][k] = Math.sqrt(A.val[i][i] - sum);
+          //if giving NaN value (not positive definite), throw error
+          if (isNaN(L.val[i][k])) {
+            throw new Error('Not positive definite. Cholensky decomposition does not apply');
+          }
         } else {
           L.val[i][k] = (1.0 / L.val[k][k]) * (A.val[i][k] - sum);
+          if (isNaN(L.val[i][k])) {
+            throw new Error('Not positive definite.');
+          }
         }
       }
     }

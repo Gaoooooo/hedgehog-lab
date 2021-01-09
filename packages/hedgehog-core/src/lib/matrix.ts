@@ -460,6 +460,57 @@ export class Mat {
     return this.equals(rightOperand);
   }
 
+  
+  //// compare mat1 !== mat2, which right operand mat2 could be a matrix object, 2D array, 1D array or a scalar number
+  [Symbol.for('!==')](
+    rightOperand: Mat | number | number[] | number[][],
+    EPSILON = 0.0001
+  ): boolean {
+    //if right operand is a raw array of number or 2D array, initialize the matrix first
+    if (Array.isArray(rightOperand)) {
+      let rightOperandMatrix = new Mat(rightOperand);
+      return !this.equals(rightOperandMatrix);
+    }
+
+    //if right operand is a number, mul the number as a scalar
+    else if (typeof rightOperand === 'number') {
+      if (this.rows !== 1 || this.cols !== 1) {
+        throw new Error('This matrix cannot be compared with a scalar');
+      }
+      return !(
+        (this.val[0][0] - rightOperand) * (this.val[0][0] - rightOperand) <
+        EPSILON
+      );
+    }
+    //otherwise, minus the right operand as a matrix
+    return !this.equals(rightOperand);
+  }
+
+  //// compare mat1 !== mat2, which right operand mat2 could be a matrix object, 2D array, 1D array or a scalar number
+  [Symbol.for('!=')](
+    rightOperand: Mat | number | number[] | number[][],
+    EPSILON = 0.0001
+  ): boolean {
+    //if right operand is a raw array of number or 2D array, initialize the matrix first
+    if (Array.isArray(rightOperand)) {
+      let rightOperandMatrix = new Mat(rightOperand);
+      return !this.equals(rightOperandMatrix);
+    }
+
+    //if right operand is a number, mul the number as a scalar
+    else if (typeof rightOperand === 'number') {
+      if (this.rows !== 1 || this.cols !== 1) {
+        throw new Error('This matrix cannot be compared with a scalar');
+      }
+      return !(
+        (this.val[0][0] - rightOperand) * (this.val[0][0] - rightOperand) <
+        EPSILON
+      );
+    }
+    //otherwise, minus the right operand as a matrix
+    return !this.equals(rightOperand);
+  }
+
   //setter and getter
   set(row: number, col: number, val: number): Mat {
     this.dimCheck(row, col);
